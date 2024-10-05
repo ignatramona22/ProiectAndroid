@@ -1,0 +1,2 @@
+Descriere proiect Android
+Eu aș încerca să fac o aplicație simplă de eLearning. La ecrane aș avea secțiunea de sign in, home, courses, profile, stats.
