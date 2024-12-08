@@ -1,6 +1,7 @@
 package ro.ase.grupa1094;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,29 +13,45 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private HistoryAdapter historyAdapter;
-    private List<History> historyList;
+    private List<History> historyList = new ArrayList<>();
+    private static String urlHistory = "https://www.jsonkeeper.com/b/LOXH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        initComponenteHistory();
+        incarcareHistoryDinRetea();
 
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        historyList = loadHistoryData();
-        historyAdapter = new HistoryAdapter(historyList);
-        recyclerView.setAdapter(historyAdapter);
     }
 
-    private List<History> loadHistoryData() {
-        List<History> list = new ArrayList<>();
-        list.add(new History("Mathematics", "The Map of Mathematics", "10-10-2024", 75));
-        list.add(new History("Geography", "Capitals", "09-10-2024", 50));
-        list.add(new History("Time management", "Benefits of Being Organised", "08-10-2024", 100));
-        list.add(new History("Business", "Resilient Leadership", "08-10-2024", 55));
-        return list;
+    private void incarcareHistoryDinRetea()
+    {
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                HttpsManager httpsManager = new HttpsManager(urlHistory);
+                String rezultat = httpsManager.procesare();
+                new Handler(getMainLooper()).post(()->{
+                    preluareHistoryDinJSON(rezultat);
+                });
+            }
+        };
+        thread.start();
+    }
+
+    private void preluareHistoryDinJSON(String json)
+    {
+        historyList.addAll(HistoryParser.parsareJSON(json));
+        HistoryAdapter adapter =(HistoryAdapter) recyclerView.getAdapter();
+        adapter.notifyDataSetChanged();
+    }
+    private void initComponenteHistory()
+    {
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        HistoryAdapter adapter = new HistoryAdapter(this, historyList);
+        recyclerView.setAdapter(adapter);
     }
 }

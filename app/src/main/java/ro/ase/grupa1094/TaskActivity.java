@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 public class TaskActivity extends AppCompatActivity {
     private EditText taskTitleEditText;
@@ -54,34 +55,37 @@ public class TaskActivity extends AppCompatActivity {
         String token = sharedPreferences.getString("token", "Default");
         Toast.makeText(this, token, Toast.LENGTH_SHORT).show();
 
+
+
+
         saveTaskButton.setOnClickListener(view -> {
             String title = taskTitleEditText.getText().toString().trim();
             String description = taskDescriptionEditText.getText().toString().trim();
-
 
             if (title.isEmpty() || description.isEmpty()) {
                 Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-
             Status status = getSelectedStatus();
-
             Task task = new Task(title, description, status);
 
-            Intent resultIntent = new Intent();
-            if (isEditing) {
-                resultIntent.putExtra("edit", task);
-                isEditing=false;
-            } else {
-                resultIntent.putExtra("task", task);
-            }
 
-            setResult(RESULT_OK, resultIntent);
+            new Thread(() -> {
+                AppDataBase db = Room.databaseBuilder(getApplicationContext(), AppDataBase.class, "app.db").build();
+                long taskId = db.taskDAO().insertTask(task);
+                runOnUiThread(() -> {
+                    Intent intent = new Intent(TaskActivity.this, DetailsActivity.class);
+                    intent.putExtra("taskId", (int) taskId);
+                    intent.putExtra("taskTitle", task.getTitle());
+                    intent.putExtra("task", task);
+                    startActivity(intent);
 
-            finish();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                });
+            }).start();
         });
-
     }
 
 

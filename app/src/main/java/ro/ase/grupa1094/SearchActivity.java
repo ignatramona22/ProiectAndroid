@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,73 +20,58 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    EditText searchEditText;
-    RecyclerView recyclerView;
-    CourseAdapter courseAdapter;
-    List<Course> courseList;
-    List<Course> filteredCourses;
-    ImageView arrowBack;
+   private RecyclerView recyclerView;
+   private List<Course> courseList;
+   private ItemAdapter itemAdapter;
+   private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
-
-        searchEditText = findViewById(R.id.searchEditText);
         recyclerView = findViewById(R.id.recyclerView);
-        arrowBack = findViewById(R.id.ivarrow);
+        searchView = findViewById(R.id.svSearch);
+        searchView.clearFocus();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchList(newText);
+                return true;
+            }
+        });
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(SearchActivity.this, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
         courseList = new ArrayList<>();
+
         courseList.add(new Course("Mathematics", "Learn algebra and calculus.", 19.99F));
         courseList.add(new Course("Geography", "Explore the world's geography.", 15.99F));
         courseList.add(new Course("Time Management", "Master your time.", 12.99F));
         courseList.add(new Course("Business", "Learn the basics of business.", 29.99F));
-        courseList.add(new Course("History", "Discover past events.", 14.99F));
-
-        filteredCourses = new ArrayList<>(courseList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        courseAdapter = new CourseAdapter(this, R.layout.view_course, filteredCourses, getLayoutInflater());
-      //  recyclerView.setAdapter(courseAdapter);
 
 
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        itemAdapter = new ItemAdapter(SearchActivity.this, courseList);
+        recyclerView.setAdapter(itemAdapter);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                filterCourses(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
-        arrowBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(SearchActivity.this, "You're back on the home page", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
-    private void filterCourses(String query) {
-        filteredCourses.clear();
-        for (Course course : courseList) {
-            if (course.getTitle().toLowerCase().contains(query.toLowerCase())) {
-                filteredCourses.add(course);
+    private void searchList(String text){
+        List<Course> dataSearchList = new ArrayList<>();
+        for (Course data : courseList){
+            if (data.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                dataSearchList.add(data);
             }
         }
-        courseAdapter.notifyDataSetChanged();
-    }
-
-    public void openHomeActivity(View view) {
-        Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-        startActivity(intent);
+        if (dataSearchList.isEmpty()){
+            Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT).show();
+        } else {
+            itemAdapter.setSearchList(dataSearchList);
+        }
     }
 }

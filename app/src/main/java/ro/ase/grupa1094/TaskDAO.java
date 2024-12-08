@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskDAO
 {
     @Insert
-    void insertTask(Task task);
+    long insertTask(Task task);
 
     @Query("SELECT * FROM Taskuri")
     List<Task> getAllTasks();

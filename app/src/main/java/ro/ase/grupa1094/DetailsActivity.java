@@ -14,7 +14,7 @@ public class DetailsActivity extends AppCompatActivity
 {
     private EditText additionalInfoEditText;
     private TextView taskDataTextView;
-
+    private boolean isEditing = false;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,28 +24,52 @@ public class DetailsActivity extends AppCompatActivity
         additionalInfoEditText = findViewById(R.id.additionalInfoEditText);
 
         Button saveDetailsButton = findViewById(R.id.saveDetailsButton);
-        saveDetailsButton.setOnClickListener(v -> returnDetailsData());
 
         Intent editIntent= getIntent();
         if(editIntent.hasExtra("edit"))
         {
-            Task editTask= (Task) editIntent.getSerializableExtra("edit");
-            Toast.makeText(this, editTask.toString(), Toast.LENGTH_SHORT).show();
+            isEditing = true;
+            Details editDetail= (Details) editIntent.getSerializableExtra("edit");
+            taskDataTextView.setText(editDetail.getTaskData());
+            additionalInfoEditText.setText(editDetail.getAdditionalInfo());
+
         }
+
+        if (editIntent.hasExtra("taskTitle")) {
+            String taskTitle = editIntent.getStringExtra("taskTitle");
+            taskDataTextView.setText(taskTitle);
+        }
+
+        saveDetailsButton.setOnClickListener(view->{
+            String taskData = taskDataTextView.getText().toString();
+            String additionalInfo = additionalInfoEditText.getText().toString();
+            int taskId = getIntent().getIntExtra("taskId", -1);
+            if (taskId == -1) {
+                Toast.makeText(this, "Invalid Task ID!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            if (taskData.isEmpty() || additionalInfo.isEmpty()) {
+                Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+            }
+
+            Details details = new Details(taskData, additionalInfo, taskId);
+            Toast.makeText(this, details.toString(), Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent();
+            if(isEditing)
+            {
+                intent.putExtra("edit", details);
+                isEditing = false;
+            }
+            else {
+                intent.putExtra("detail", details);
+            }
+
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
-
-    private void returnDetailsData() {
-        String taskData = taskDataTextView.getText().toString();
-        String aditionalInfo = additionalInfoEditText.getText().toString();
-
-        Details detail = new Details(taskData, aditionalInfo);
-
-        Toast.makeText(this, "Task details: " + detail.toString(), Toast.LENGTH_LONG).show();
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("detail", detail);
-        setResult(RESULT_OK, resultIntent);
-        finish();
-    }
-
 
 }

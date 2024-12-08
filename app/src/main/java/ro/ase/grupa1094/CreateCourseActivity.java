@@ -32,9 +32,11 @@ public class CreateCourseActivity extends AppCompatActivity {
             coursePriceEditText.setText(String.valueOf(editCourse.getPrice()));
 
         }
+
         SharedPreferences sharedPreferences = getSharedPreferences("local", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", "Default");
         Toast.makeText(this, token, Toast.LENGTH_SHORT).show();
+
         saveButton.setOnClickListener(view -> {
             String courseTitle = courseTitleEditText.getText().toString();
             String courseDescription = courseDescriptionEditText.getText().toString();

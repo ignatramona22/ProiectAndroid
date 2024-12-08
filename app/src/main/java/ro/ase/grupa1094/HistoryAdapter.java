@@ -1,5 +1,6 @@
 package ro.ase.grupa1094;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,14 @@ import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
+    private Context context;
     private List<History> historyList;
+    private LayoutInflater inflater;
 
-    public HistoryAdapter(List<History> historyList) {
+    public HistoryAdapter(Context context, List<History> historyList) {
+        this.context = context;
         this.historyList = historyList;
+        this.inflater = LayoutInflater.from(context);
     }
 
     @NonNull

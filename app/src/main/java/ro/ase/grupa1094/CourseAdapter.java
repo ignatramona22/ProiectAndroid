@@ -1,65 +1,78 @@
 package ro.ase.grupa1094;
 
-
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public  class CourseAdapter extends ArrayAdapter<Course>
-{
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
     private Context context;
-    private int layoutId;
     private List<Course> courseList;
     private LayoutInflater inflater;
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener itemLongClickListener;
 
-    public CourseAdapter(@NonNull Context context, int resource, @NonNull List<Course> courseList, LayoutInflater inflater) {
-        super(context, resource, courseList);
+    public CourseAdapter(Context context, List<Course> courseList, OnItemClickListener onItemClickListener,  OnItemLongClickListener itemLongClickListener) {
         this.context = context;
-        this.layoutId = resource;
         this.courseList = courseList;
-        this.inflater = inflater;
+        this.inflater = LayoutInflater.from(context);
+        this.onItemClickListener = onItemClickListener;
+        this.itemLongClickListener = itemLongClickListener;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-    {
-        View view = inflater.inflate(layoutId, parent, false);
+    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.view_course, parent, false);
+        return new CourseViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
         Course course = courseList.get(position);
+        holder.tvTitle.setText(course.getTitle());
+        holder.tvDescription.setText(course.getDescription());
+        holder.tvPrice.setText(String.format("Price: $%.2f", course.getPrice()));
 
-        TextView tvTitle = view.findViewById(R.id.tvTitle);
-        TextView tvDescription = view.findViewById(R.id.tvDescription);
-        TextView tvPrice = view.findViewById(R.id.tvPrice);
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(course, position);
+            }
+        });
 
-        tvTitle.setText(course.getTitle());
-        tvDescription.setText(course.getDescription());
-        tvPrice.setText(String.valueOf(course.getPrice()));
+        holder.itemView.setOnLongClickListener(v -> {
+            itemLongClickListener.onItemLongClick(course, position);
+            return true;
+        });
+    }
 
-        if(course.getTitle() !=null)
-        {
-            tvTitle.setText(course.getTitle().toUpperCase());
-            tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
+    @Override
+    public int getItemCount() {
+        return courseList.size();
+    }
 
+    public interface OnItemClickListener {
+        void onItemClick(Course course, int position);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Course course, int position);
+    }
+    static class CourseViewHolder extends RecyclerView.ViewHolder {
+        TextView tvTitle, tvDescription, tvPrice;
+
+        public CourseViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvTitle = itemView.findViewById(R.id.tvAddCourse);
+            tvDescription = itemView.findViewById(R.id.tvDescriptionCourse);
+            tvPrice = itemView.findViewById(R.id.tvPriceCourse);
         }
-
-        tvPrice.setText(String.format("$%.2f", course.getPrice()));
-        tvPrice.setTypeface(tvPrice.getTypeface(), Typeface.ITALIC);
-
-        String description = course.getDescription();
-        if (description.length() > 100) {
-            description = description.substring(0, 100) + "...";
-        }
-        tvDescription.setText(description);
-
-        return view;
     }
 }

@@ -3,7 +3,13 @@ package ro.ase.grupa1094;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +20,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -28,8 +35,6 @@ public class ProfileActivity extends AppCompatActivity
     TextView changePicture;
     CustomButton customButton;
     Button createTaskBtn;
-    Button addTaskDetailBtn;
-
     ImageView arrowBackToHome;
     ListView lvCreateTask;
     ListView lvTaskDetail;
@@ -40,11 +45,10 @@ public class ProfileActivity extends AppCompatActivity
     private int pozitieTaskInLinsta;
     private int pozitieDetailInLinsta;
     private AppDataBase db;
-
+    private static String urlTask = "https://www.jsonkeeper.com/b/3CTX";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
@@ -53,18 +57,20 @@ public class ProfileActivity extends AppCompatActivity
         etEmail = findViewById(R.id.et_email);
         etPhone = findViewById(R.id.et_phone);
         etPassword = findViewById(R.id.et_password);
-        profilePicture=findViewById(R.id.profile_picture);
-        changePicture=findViewById(R.id.change_picture);
-        arrowBackToHome=findViewById(R.id.btn_back);
-        lvCreateTask = findViewById(R.id.lvCreateTask);
+        profilePicture = findViewById(R.id.profile_picture);
+        changePicture = findViewById(R.id.change_picture);
+        arrowBackToHome = findViewById(R.id.btn_back);
         lvTaskDetail = findViewById(R.id.lvtaskDetails);
         createTaskBtn = findViewById(R.id.createTaskButton);
-        addTaskDetailBtn = findViewById(R.id.viewDetailsButton);
         loadUserData();
 
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDataBase.class, "app-database").build();
+        db = AppDataBase.getInstance(getApplicationContext());
 
+        ImageView imgShare = findViewById(R.id.btn_share);
+        imgShare.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), AllUsersActivity.class);
+            startActivity(intent);
+        });
 
         customButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +86,6 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
-        addTaskDetailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDetailsActivity();
-            }
-        });
         arrowBackToHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +102,18 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
-        lvCreateTask.setOnItemClickListener((adapterView, view, pozition, l)->{
+        initComponenteTask();
+        incarcareTaskDinRetea();
+
+        new Thread(() -> {
+            taskList = db.taskDAO().getAllTasks();
+            runOnUiThread(() -> {
+                TaskAdapter adapter = new TaskAdapter(this, R.layout.view_task, taskList, getLayoutInflater());
+                lvCreateTask.setAdapter(adapter);
+            });
+        }).start();
+
+        lvCreateTask.setOnItemClickListener((adapterView, view, pozition, l) -> {
             pozitieTaskInLinsta = pozition;
             Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
             intent.putExtra("edit", taskList.get(pozitieTaskInLinsta));
@@ -110,48 +121,56 @@ public class ProfileActivity extends AppCompatActivity
 
         });
 
+
+        lvCreateTask.setOnItemLongClickListener((adapterView, view, position, l) -> {
+            pozitieTaskInLinsta = position;
+            Task taskPtSters = taskList.get(position);
+            new Thread(() -> {
+                db.taskDAO().deleteTask(taskPtSters);
+                runOnUiThread(() -> {
+                    taskList.remove(position);
+                    TaskAdapter adapter = (TaskAdapter) lvCreateTask.getAdapter();
+                    adapter.notifyDataSetChanged();
+                });
+            }).start();
+            return true;
+        });
+
         taskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getData().hasExtra("task")) {
                 Intent intent = result.getData();
                 Task task = (Task) intent.getSerializableExtra("task");
-                if(task!=null)
-                {
+                if (task != null) {
                     new Thread(() -> {
                         db.taskDAO().insertTask(task);
                         runOnUiThread(() -> {
                             taskList.add(task);
-                            TaskAdapter adapter = new TaskAdapter(this, R.layout.view_task, taskList, getLayoutInflater());
-                            lvCreateTask.setAdapter(adapter);
+                            TaskAdapter adapter = (TaskAdapter) lvCreateTask.getAdapter();
+                            adapter.notifyDataSetChanged();
                         });
                     }).start();
+
+                }
+            } else if (result.getData().hasExtra("edit")) {
+                Intent intent = result.getData();
+                Task task = (Task) intent.getSerializableExtra("edit");
+                if (task != null) {
                     new Thread(() -> {
-                        taskList = db.taskDAO().getAllTasks();
+                        Task editTask = taskList.get(pozitieTaskInLinsta);
+                        db.taskDAO().updateTask(task);
                         runOnUiThread(() -> {
-                            TaskAdapter adapter = new TaskAdapter(this, R.layout.view_task, taskList, getLayoutInflater());
-                            lvCreateTask.setAdapter(adapter);
+                            editTask.setTitle(task.getTitle());
+                            editTask.setDescription(task.getDescription());
+                            editTask.setStatus(task.getStatus());
+                            TaskAdapter adapter = (TaskAdapter) lvCreateTask.getAdapter();
+                            adapter.notifyDataSetChanged();
                         });
                     }).start();
                 }
-//                TaskAdapter adapter = new TaskAdapter(this, R.layout.view_task, taskList, getLayoutInflater());
-//                lvCreateTask.setAdapter(adapter);
-            } else if(result.getData().hasExtra("edit"))
-            {
-                Intent intent = result.getData();
-                Task task = (Task) intent.getSerializableExtra("edit");
-                if(task !=null)
-                {
-                    Task editTask = taskList.get(pozitieTaskInLinsta);
-                    editTask.setTitle(task.getTitle());
-                    editTask.setDescription(task.getDescription());
-                    editTask.setStatus(task.getStatus());
-
-                    TaskAdapter adapter = (TaskAdapter) lvCreateTask.getAdapter();
-                    adapter.notifyDataSetChanged();
-                 }
             }
         });
 
-        SharedPreferences sharedPreferences= getSharedPreferences("local", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("local", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString("token", "token1234");
@@ -160,7 +179,8 @@ public class ProfileActivity extends AppCompatActivity
         String token = sharedPreferences.getString("token", "Default");
         Toast.makeText(this, token, Toast.LENGTH_SHORT).show();
 
-        lvTaskDetail.setOnItemClickListener((adapterView, view, pozition, l)->{
+
+        lvTaskDetail.setOnItemClickListener((adapterView, view, pozition, l) -> {
             pozitieDetailInLinsta = pozition;
             Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
             intent.putExtra("edit", detailsList.get(pozitieDetailInLinsta));
@@ -168,24 +188,47 @@ public class ProfileActivity extends AppCompatActivity
 
         });
 
+        new Thread(() -> {
+            detailsList = db.detailsDAO().getAllDetails();
+            runOnUiThread(() -> {
+                DetailsAdapter adapter = new DetailsAdapter(getApplicationContext(), R.layout.view_detail, detailsList, getLayoutInflater());
+                lvTaskDetail.setAdapter(adapter);
+            });
+        }).start();
+
         detailsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK) {
+            if (result.getData().hasExtra("detail")) {
                 Intent intent = result.getData();
                 Details detail = (Details) intent.getSerializableExtra("detail");
-                if(detail!=null)
-                {
-                    detailsList.add(detail);
+                if (detail != null) {
+                    new Thread(() -> {
+                        db.detailsDAO().insertDetails(detail);
+                        runOnUiThread(() -> {
+                            detailsList.add(detail);
+                            DetailsAdapter adapter = (DetailsAdapter) lvTaskDetail.getAdapter();
+                            adapter.notifyDataSetChanged();
+                        });
+                    });
                 }
-                DetailsAdapter adapter = new DetailsAdapter(this, R.layout.view_detail, detailsList, getLayoutInflater());
-                lvTaskDetail.setAdapter(adapter);
+            } else if (result.getData().hasExtra("edit")) {
+                Intent intent = result.getData();
+                Details detail = (Details) intent.getSerializableExtra("edit");
+                if (detail != null) {
+                    new Thread(() -> {
+                        Details editDetails = detailsList.get(pozitieDetailInLinsta);
+                        db.detailsDAO().updateDetails(detail);
+                        runOnUiThread(() -> {
+                            editDetails.setTaskData(detail.getTaskData());
+                            editDetails.setAdditionalInfo(detail.getAdditionalInfo());
+                            DetailsAdapter adapter = (DetailsAdapter) lvTaskDetail.getAdapter();
+                            adapter.notifyDataSetChanged();
+                        });
+                    }).start();
+                }
             }
-
         });
 
-
     }
-
-
 
     public void openHomeActivity(View view) {
         Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
@@ -194,11 +237,6 @@ public class ProfileActivity extends AppCompatActivity
     private void openTaskActivity() {
         Intent intent = new Intent(ProfileActivity.this,  TaskActivity.class);
         taskLauncher.launch(intent);
-    }
-
-    private void openDetailsActivity() {
-        Intent intent = new Intent(ProfileActivity.this,  DetailsActivity.class);
-        detailsLauncher.launch(intent);
     }
 
 
@@ -257,10 +295,39 @@ public class ProfileActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-
             int avatarResource = data.getIntExtra("avatar", R.drawable.avatar8);
             profilePicture.setImageResource(avatarResource);
         }
     }
+
+
+    private void incarcareTaskDinRetea()
+    {
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                HttpsManager httpsManager = new HttpsManager(urlTask);
+                String rezultat = httpsManager.procesare();
+                new Handler(getMainLooper()).post(()->{
+                    preluareTaskDinJSON(rezultat);
+                });
+            }
+        };
+        thread.start();
+    }
+    private void preluareTaskDinJSON(String json)
+    {
+        taskList.addAll(TaskParser.parsareJSON(json));
+        TaskAdapter adapter = (TaskAdapter) lvCreateTask.getAdapter();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void initComponenteTask()
+    {
+        lvCreateTask = findViewById(R.id.lvCreateTask);
+        TaskAdapter adapter = new TaskAdapter(getApplicationContext(), R.layout.view_task, taskList, getLayoutInflater());
+        lvCreateTask.setAdapter(adapter);
+    }
+
 
 }

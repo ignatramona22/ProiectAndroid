@@ -17,13 +17,15 @@ tools:context=".HomeActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/babyBlue"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/ivarrow"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="13dp"
             android:onClick="openMainActivity"
             android:src="@drawable/baseline_arrow_back_24" />
 
@@ -42,8 +44,8 @@ tools:context=".HomeActivity">
             android:id="@+id/createCourseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:layout_alignParentEnd="true"
+            android:clickable="true"
             app:fabSize="mini"
             app:srcCompat="@android:drawable/ic_input_add" />
     </RelativeLayout>
@@ -62,15 +64,16 @@ tools:context=".HomeActivity">
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/orange"
+            android:backgroundTint="@color/lightGray1"
             app:cardCornerRadius="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/carview_border"
                 android:padding="10dp">
 
                 <TextView
@@ -80,7 +83,7 @@ tools:context=".HomeActivity">
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="1dp"
                     android:text="Maths"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black1"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -92,10 +95,11 @@ tools:context=".HomeActivity">
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="1dp"
                     android:layout_toEndOf="@id/tvMath"
+                    android:background="@drawable/carview_border"
                     android:backgroundTint="@color/white"
                     android:padding="5dp"
                     android:text="Feedback"
-                    android:textColor="@color/orange"
+                    android:textColor="@color/lightGray"
                     android:textSize="12sp" />
 
                 <ListView
@@ -104,17 +108,20 @@ tools:context=".HomeActivity">
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvMath"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="-4dp"
+                    android:layout_marginTop="-10dp"
                     android:hint="Feedback"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/white" />
+                    android:textColorHint="@color/white">
+
+                </ListView>
 
                 <ImageView
                     android:layout_width="150dp"
                     android:layout_height="100dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="250dp"
                     android:maxHeight="100dp"
                     android:src="@drawable/maths" />
+
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
@@ -123,15 +130,16 @@ tools:context=".HomeActivity">
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/lightPink"
+            android:backgroundTint="@color/lightGray1"
             app:cardCornerRadius="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/carview_border"
                 android:padding="10dp">
 
                 <TextView
@@ -141,7 +149,7 @@ tools:context=".HomeActivity">
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="1dp"
                     android:text="Geography"
-                    android:textColor="#ffff"
+                    android:textColor="@color/black1"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -149,6 +157,7 @@ tools:context=".HomeActivity">
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginStart="260dp"
                     android:layout_marginEnd="-21dp"
                     android:maxHeight="100dp"
                     android:src="@drawable/geography" />
@@ -159,15 +168,16 @@ tools:context=".HomeActivity">
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/yellow"
+            android:backgroundTint="@color/lightGray1"
             app:cardCornerRadius="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/carview_border"
                 android:padding="10dp">
 
                 <TextView
@@ -177,7 +187,7 @@ tools:context=".HomeActivity">
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="1dp"
                     android:text="Time management"
-                    android:textColor="#ffff"
+                    android:textColor="@color/black1"
                     android:textSize="27sp"
                     android:textStyle="bold" />
 
@@ -195,15 +205,16 @@ tools:context=".HomeActivity">
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/mintGreen"
+            android:backgroundTint="@color/lightGray1"
             app:cardCornerRadius="15dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/carview_border"
                 android:padding="10dp">
 
                 <TextView
@@ -213,7 +224,7 @@ tools:context=".HomeActivity">
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="1dp"
                     android:text="Business"
-                    android:textColor="#ffff"
+                    android:textColor="@color/black1"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -228,54 +239,12 @@ tools:context=".HomeActivity">
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAddCourse"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:backgroundTint="@color/teal_1"
-            app:cardCornerRadius="15dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/courseListTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="0.01dp"
-                    android:padding="16dp"
-                    android:text="Your course"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <ListView
-                    android:id="@+id/lvAddCourse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/courseListTextView"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="-22dp"
-                    android:textColor="#ffff">
-
-                </ListView>
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="100dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="-27dp"
-                    android:maxHeight="100dp"
-                    android:src="@drawable/maths" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 </ScrollView>

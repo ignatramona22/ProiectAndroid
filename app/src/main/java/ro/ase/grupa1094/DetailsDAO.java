@@ -13,11 +13,15 @@ public interface DetailsDAO {
     @Insert
     void insertDetails(Details details);
 
-    @Query("SELECT * FROM Details WHERE taskId = :taskId")
-    List<Details> getDetailsByTaskId(int taskId);
+    @Query("SELECT * FROM Details")
+    List<Details> getAllDetails();
 
     @Update
     void updateDetails(Details details);
+
+    @Query("SELECT * FROM Details WHERE taskId = :taskId")
+    Details getDetailsByTaskId(int taskId);
+
 
     @Delete
     void deleteDetails(Details details);

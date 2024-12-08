@@ -1,21 +1,34 @@
 package ro.ase.grupa1094;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName="Details")
-public class Details implements Serializable {
+@Entity(
+        tableName = "Details",
+        foreignKeys = @ForeignKey(
+                entity = Task.class,
+                parentColumns = "taskId",
+                childColumns = "taskId",
+                onDelete = ForeignKey.CASCADE
+        ),
+        indices = {@Index(value = "taskId")}
+)
+public class Details implements Serializable
+{
     @PrimaryKey(autoGenerate = true)
     private int detailId;
     private String taskData;
     private String additionalInfo;
     private int taskId;
-    public Details(String taskData, String additionalInfo)
+    public Details(String taskData, String additionalInfo, int taskId)
     {
         this.taskData = taskData;
         this.additionalInfo = additionalInfo;
+        this.taskId = taskId;
     }
 
 
@@ -41,6 +54,14 @@ public class Details implements Serializable {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public void setTaskData(String taskData) {
+        this.taskData = taskData;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
     }
 
     @Override

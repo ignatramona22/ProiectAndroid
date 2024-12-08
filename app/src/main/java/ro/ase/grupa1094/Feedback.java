@@ -1,8 +1,15 @@
 package ro.ase.grupa1094;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 
+
+@Entity(tableName="Feedback")
 public class Feedback implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    private int idFeedback;
     private String username;
     private String feedbackText;
     private int rating;
@@ -40,6 +47,13 @@ public class Feedback implements Serializable {
     }
 
 
+    public int getIdFeedback() {
+        return idFeedback;
+    }
+
+    public void setIdFeedback(int idFeedback) {
+        this.idFeedback = idFeedback;
+    }
 
     @Override
     public String toString() {
