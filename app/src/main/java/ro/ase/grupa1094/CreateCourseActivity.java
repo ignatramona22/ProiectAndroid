@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateCourseActivity extends AppCompatActivity {
     private EditText courseTitleEditText, courseDescriptionEditText, coursePriceEditText;
+    private ImageView ivBackToHome;
     private boolean isEditing = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,12 @@ public class CreateCourseActivity extends AppCompatActivity {
         courseTitleEditText = findViewById(R.id.courseTitleEditText);
         courseDescriptionEditText = findViewById(R.id.courseDescriptionEditText);
         coursePriceEditText = findViewById(R.id.coursePriceEditText);
+        ivBackToHome = findViewById(R.id.ivarrowBackToHome);
+
+        ivBackToHome.setOnClickListener(view->{
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+        });
 
         Button saveButton = findViewById(R.id.saveButton);
         Intent editIntent = getIntent();

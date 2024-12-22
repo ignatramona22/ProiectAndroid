@@ -3,4 +3,15 @@
     <string name="desc1">What would you like to learn today?</string>
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="close_nav">Close Navigation Drawer</string>
+
+    <string-array name="paymentMethods">
+        <item>Card</item>
+        <item>PayPal</item>
+    </string-array>
+
+    <string-array name="paymentStatus">
+        <item>Completed</item>
+        <item>Pending</item>
+        <item>Failed</item>
+    </string-array>
 </resources>

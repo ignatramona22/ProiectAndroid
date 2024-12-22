@@ -46,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity
     private int pozitieDetailInLinsta;
     private AppDataBase db;
     private static String urlTask = "https://www.jsonkeeper.com/b/3CTX";
+    ImageView ivPayment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity
         arrowBackToHome = findViewById(R.id.btn_back);
         lvTaskDetail = findViewById(R.id.lvtaskDetails);
         createTaskBtn = findViewById(R.id.createTaskButton);
+        ivPayment = findViewById(R.id.ivPayment);
         loadUserData();
 
         db = AppDataBase.getInstance(getApplicationContext());
@@ -100,6 +102,11 @@ public class ProfileActivity extends AppCompatActivity
                 Intent intent = new Intent(ProfileActivity.this, ChooseAvatarActivity.class);
                 startActivityForResult(intent, 1);
             }
+        });
+
+        ivPayment.setOnClickListener(view->{
+            Intent intent = new Intent(getApplicationContext(), CoursePaymentActivity.class);
+            startActivity(intent);
         });
 
         initComponenteTask();

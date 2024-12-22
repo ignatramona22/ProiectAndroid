@@ -259,6 +259,7 @@ public class HomeActivity extends AppCompatActivity
         initComponenteCursNou();
         incarcareCursuriDinRetea();
 
+
         launcherC= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result->{
             assert result.getData() != null;
             if(result.getData().hasExtra("course"))

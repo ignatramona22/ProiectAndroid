@@ -1,7 +1,9 @@
 package ro.ase.grupa1094;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private ImageView ivBackToHome;
     private List<History> historyList = new ArrayList<>();
     private static String urlHistory = "https://www.jsonkeeper.com/b/LOXH";
 
@@ -49,6 +52,11 @@ public class HistoryActivity extends AppCompatActivity {
     }
     private void initComponenteHistory()
     {
+        ivBackToHome = findViewById(R.id.ivarrowBackToHomeActivity);
+        ivBackToHome.setOnClickListener(view->{
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+        });
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         HistoryAdapter adapter = new HistoryAdapter(this, historyList);

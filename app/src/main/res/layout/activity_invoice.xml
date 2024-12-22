@@ -1,0 +1,245 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/babyBlue"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/ivBackToPayment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/baseline_arrow_back_24" />
+
+            <TextView
+                android:id="@+id/tvInvoiceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Invoice Details"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivInvoiceIcon"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/baseline_featured_play_list_24" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textSize="16sp" />
+
+        <ListView
+            android:id="@+id/lvCourseTitles"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+
+        <TextView
+            android:id="@+id/tvTotalAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: 0.0"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textSize="16sp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvTaxAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tax: 0.0"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textSize="16sp"
+            android:gravity="center" />
+
+
+        <TextView
+            android:id="@+id/tvDiscountAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Discount: 0.0"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:textSize="16sp"
+            android:gravity="center" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnApplyTax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:text="Apply Tax"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnApplyDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:text="Apply Discount"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnCleanInvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:text="Clear"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnCreateInvoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/lightBlue"
+            android:text="Create Invoice"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invoices List"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:background="@color/babyBlue"
+                android:textColor="@android:color/white" />
+
+            <ListView
+                android:id="@+id/lvInvoices"
+                android:layout_width="match_parent"
+                android:layout_height="700dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Statistics"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="12dp"
+                android:background="@color/babyBlue"
+                android:textColor="@android:color/white" />
+
+            <EditText
+                android:id="@+id/etSearchUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter username to search"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/btnSearchInvoices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:textColor="@android:color/white"
+                android:text="Search Invoices" />
+
+            <Button
+                android:id="@+id/btnCalculateNetAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:textColor="@android:color/white"
+                android:text="Calculate Net Amount" />
+
+            <TextView
+                android:id="@+id/tvNetAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="8pt"
+                android:text="Net Amount: 0.0" />
+
+            <Button
+                android:id="@+id/btnFindMaxInvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:backgroundTint="@color/lightBlue"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:textColor="@android:color/white"
+                android:text="Find Max Invoice" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

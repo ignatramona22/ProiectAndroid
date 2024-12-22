@@ -1,7 +1,9 @@
 package ro.ase.grupa1094;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import java.util.List;
 public class AllUsersActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    ImageView ivBackToProfile;
     List<UserProfile> userProfileList = new ArrayList<>();
     private static final String urlUsers = "https://www.jsonkeeper.com/b/Z8M4";
     @Override
@@ -50,6 +53,11 @@ public class AllUsersActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        ivBackToProfile = findViewById(R.id.ivBackToProfile);
+        ivBackToProfile.setOnClickListener(view->{
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+        });
         recyclerView = findViewById(R.id.rvUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         UsersAdapter adapter = new UsersAdapter(this, userProfileList);
