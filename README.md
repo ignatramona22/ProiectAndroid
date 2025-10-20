@@ -1,15 +1,18 @@
 🧠 Project Overview
+<br>
 Full-stack Android native application designed for educational institutions or independent instructors. Users can explore courses, complete purchases through secure payment forms, and receive automatically generated invoices with tax and discount calculations.
-
+<br>
 ⚙️ Technology Stack
+<br>
 Language:       Java
 Framework:      Android SDK (API 24+)
 Build System:   Gradle 8+
 Database:       SQLite / Room, Firebase
 UI:             XML Layouts, Material Design Components
 Architecture:   MVVM-inspired, Activity-based Navigation
-
+<br>
 🚀 Core Features
+<br>
 🔐 Authentication & User Management
 Login and registration with robust validation
 Profile editing and avatar upload
