@@ -82,9 +82,3 @@
 ├── UI/UX Implementation (Material Design)
 └── Version Control (Git, GitHub)
 ```
-
----
-
-<div align="center">
-Made with ❤️ for educational innovation
-</div>
